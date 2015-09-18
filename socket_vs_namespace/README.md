@@ -3,8 +3,21 @@ socket that is opened while in one network namespace and then anohter
 name space is selected. What happens in that case with the socket?
 Is it still usable?
 
-How to setup test environment
-=============================
+The following tests are available:
+
+test1
+	Opens socket, connects, and then changes to another name space.
+	This test was done to see how sockets behave when we switch
+	to another name space and to efectivelly test is it mandatory
+	to have multithreaded application in case when multiple
+	namespaces have to be used by a single application.
+
+test2
+	This is almost the same as the previous test. The only difference
+	is that name space change is done BEFORE connecting, not after.
+
+How to test
+===========
 
 1. Create new namespace. The source assumes it is called TESTNS:
 

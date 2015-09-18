@@ -34,18 +34,10 @@ int main(int argc, char **argv)
 	printf("My PID is: %d\n", getpid());
 
 	/*
-	 * Create socket and connect to a remote host
+	 * Create a socket
 	 */
-	ns1_addr.sin_family = AF_INET;
-	ns1_addr.sin_port = htons(PORT1);
-	ns1_addr.sin_addr.s_addr = htonl(HOST1);
 	if ((ns1_s = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		perror("socket");
-		exit(EXIT_FAILURE);
-	}
-
-	if (connect(ns1_s, (struct sockaddr *)&ns1_addr, sizeof(struct sockaddr_in)) < 0) {
-		perror("connect");
 		exit(EXIT_FAILURE);
 	}
 
@@ -63,12 +55,24 @@ int main(int argc, char **argv)
 	}
 
 	/*
-	 * Try to communicate
+	 * Wait for some time
 	 */
 	printf("Changed to a new namespace. Sleeping for %d seconds...", SLEEP_TIME);
 	fflush(stdout);
 	sleep(SLEEP_TIME);
 	printf("\n");
+
+	/*
+	 * Connect to a remote host
+	 */
+	ns1_addr.sin_family = AF_INET;
+	ns1_addr.sin_port = htons(PORT1);
+	ns1_addr.sin_addr.s_addr = htonl(HOST1);
+
+	if (connect(ns1_s, (struct sockaddr *)&ns1_addr, sizeof(struct sockaddr_in)) < 0) {
+		perror("connect");
+		exit(EXIT_FAILURE);
+	}
 
 	/*
 	 * Try to communicate
